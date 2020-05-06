@@ -8,6 +8,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,11 +47,11 @@ class _HomePageState extends State<HomePage> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: <Widget>[
-                        addMenuItem(title: 'All', active: true),
-                        addMenuItem(title: 'Sneakers', active: false),
-                        addMenuItem(title: 'Football', active: false),
-                        addMenuItem(title: 'Soccer', active: false),
-                        addMenuItem(title: 'Sneakers', active: false),
+                        addMenuItem(title: 'All', index: 0),
+                        addMenuItem(title: 'Sneakers', index: 1),
+                        addMenuItem(title: 'Football', index: 2),
+                        addMenuItem(title: 'Soccer', index: 3),
+                        addMenuItem(title: 'Sneakers', index: 5),
                       ],
                     ),
                   ),
@@ -61,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                     direction: 'horizontal',
                     child: addProduct(
                       image: 'images/nike_1.jpg',
-                      tag: 'Sneakers 1',
+                      tag: 'Sneakers',
                       brand: 'Nike',
                       price: '\$100',
                     ),
@@ -71,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                     direction: 'horizontal',
                     child: addProduct(
                       image: 'images/nike_2.jpg',
-                      tag: 'Sneakers 2',
+                      tag: 'Football',
                       brand: 'Nike',
                       price: '\$110',
                     ),
@@ -81,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                     direction: 'horizontal',
                     child: addProduct(
                       image: 'images/nb_1.jpg',
-                      tag: 'Sneakers 3',
+                      tag: 'Soccer',
                       brand: 'NB',
                       price: '\$80',
                     ),
@@ -91,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                     direction: 'horizontal',
                     child: addProduct(
                       image: 'images/nb_2.jpg',
-                      tag: 'Sneakers 4',
+                      tag: 'Sneakers 2',
                       brand: 'NB',
                       price: '\$55',
                     ),
@@ -105,21 +107,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget addMenuItem({String title, bool active}) {
-    return AspectRatio(
-      aspectRatio: 2 / 1,
-      child: Container(
-        height: 50,
-        margin: EdgeInsets.only(right: 10),
-        decoration: BoxDecoration(
-            color: active == true ? Colors.grey[200] : Colors.transparent,
-            borderRadius: BorderRadius.circular(30)),
-        child: Center(
-          child: Text(
-            title,
-            style: TextStyle(
-                fontSize: 20,
-                color: active == true ? Colors.black : Colors.grey),
+  Widget addMenuItem({String title, int index}) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      child: AspectRatio(
+        aspectRatio: 2.5 / 1,
+        child: Container(
+          height: 50,
+          margin: EdgeInsets.only(right: 10),
+          decoration: BoxDecoration(
+            color:
+                _selectedIndex == index ? Colors.grey[200] : Colors.transparent,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Center(
+            child: Text(
+              title,
+              style: TextStyle(
+                  fontSize: 20,
+                  color: _selectedIndex == index ? Colors.black : Colors.grey),
+            ),
           ),
         ),
       ),
@@ -127,83 +138,80 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget addProduct({image, tag, brand, price}) {
-    return Hero(
-      tag: tag,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProductPage(
-                image: image,
-                tag: tag,
-                brand: brand,
-                price: price,
-              ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductPage(
+              image: image,
+              tag: tag,
+              brand: brand,
+              price: price,
             ),
-          );
-        },
-        child: Material(
-          child: Container(
-            height: 225,
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.only(bottom: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              image: DecorationImage(
-                image: AssetImage(image),
-                fit: BoxFit.cover,
-              ),
+          ),
+        );
+      },
+      child: Material(
+        child: Container(
+          height: 225,
+          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.only(bottom: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            image: DecorationImage(
+              image: AssetImage(image),
+              fit: BoxFit.cover,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          tag,
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          brand,
-                          style: TextStyle(
-                            fontSize: 18,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        tag,
+                        style: TextStyle(
+                            fontSize: 25,
                             color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: Colors.white),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.favorite_border,
-                          size: 25,
-                          color: Colors.black,
-                        ),
+                            fontWeight: FontWeight.bold),
                       ),
-                    )
-                  ],
-                ),
-                Text(
-                  price,
-                  style: TextStyle(
-                      fontSize: 35,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+                      Text(
+                        brand,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.favorite_border,
+                        size: 25,
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Text(
+                price,
+                style: TextStyle(
+                    fontSize: 35,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
       ),
